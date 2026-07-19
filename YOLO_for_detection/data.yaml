@@ -1,8 +1,0 @@
-path: /kaggle/input/datasets/anikasadiaopt/thyroid-nodule/TN5000_forReview/YOLO_for_detection/YOLO_Thyroid_Nodule_Detection
-
-train: /kaggle/input/datasets/anikasadiaopt/thyroid-nodule/TN5000_forReview/YOLO_for_detection/images/train
-val: /kaggle/input/datasets/anikasadiaopt/thyroid-nodule/TN5000_forReview/YOLO_for_detection/images/val
-test: /kaggle/input/datasets/anikasadiaopt/thyroid-nodule/TN5000_forReview/YOLO_for_detection/images/test
-
-names:
-  0: nodule
