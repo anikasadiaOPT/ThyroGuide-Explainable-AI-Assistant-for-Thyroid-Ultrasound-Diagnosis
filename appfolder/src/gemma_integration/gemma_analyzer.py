@@ -1,40 +1,23 @@
-import json
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
+import os
+from dotenv import load_dotenv
+from huggingface_hub import InferenceClient
+
+
+load_dotenv()
 
 
 class GemmaAnalyzer:
 
     def __init__(
         self,
-        model_id="google/gemma-4-26B-A4B-it",
-        token=None
+        model_id="google/gemma-4-26B-A4B-it"
     ):
 
-        self.device = (
-            "cuda"
-            if torch.cuda.is_available()
-            else "cpu"
+        self.model_id = model_id
+
+        self.client = InferenceClient(
+            api_key=os.getenv("HF_TOKEN")
         )
-
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            model_id,
-            token=token
-        )
-
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_id,
-            token=token,
-            torch_dtype=(
-                torch.float16
-                if self.device == "cuda"
-                else torch.float32
-            )
-        )
-
-        self.model = self.model.to(self.device)
-
-        self.model.eval()
 
 
     def create_prompt(self, data):
@@ -75,19 +58,29 @@ class GemmaAnalyzer:
             "Not available"
         )
 
+
         detection_confidence_text = (
+
             f"{detection_confidence * 100:.2f}%"
+
             if detection_confidence is not None
+
             else "Not available"
         )
+
 
         classification_confidence_text = (
+
             f"{classification_confidence * 100:.2f}%"
+
             if classification_confidence is not None
+
             else "Not available"
         )
 
+
         prompt = f"""
+
 You are an AI-assisted medical report explanation assistant.
 
 The computer vision system has already produced the following results.
@@ -109,6 +102,7 @@ CNN classification: {classification}
 Classification confidence: {classification_confidence_text}
 
 Bounding box: {bounding_box}
+
 
 Write exactly these six sections:
 
@@ -138,7 +132,9 @@ Do not invent symptoms, medical history, ultrasound features,
 TI-RADS scores, biopsy results, or clinical information.
 
 Return only the six sections.
+
 """
+
 
         return prompt
 
@@ -147,29 +143,28 @@ Return only the six sections.
 
         prompt = self.create_prompt(data)
 
-        inputs = self.tokenizer(
-            prompt,
-            return_tensors="pt"
-        ).to(self.device)
 
-        with torch.no_grad():
+        response = self.client.chat_completion(
 
-            outputs = self.model.generate(
-                **inputs,
-                max_new_tokens=400,
-                do_sample=False,
-                pad_token_id=self.tokenizer.eos_token_id
-            )
+            model=self.model_id,
 
-        input_length = (
-            inputs["input_ids"].shape[1]
+            messages=[
+
+                {
+
+                    "role": "user",
+
+                    "content": prompt
+
+                }
+
+            ],
+
+            max_tokens=400,
+
+            temperature=0.1
+
         )
 
-        generated_tokens = outputs[0][input_length:]
 
-        response = self.tokenizer.decode(
-            generated_tokens,
-            skip_special_tokens=True
-        ).strip()
-
-        return response
+        return response.choices[0].message.content

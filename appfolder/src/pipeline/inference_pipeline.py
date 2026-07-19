@@ -1,10 +1,11 @@
 # src/pipeline/inference_pipeline.py
 
 import cv2
-import torch
 import numpy as np
 
-from src.preprocessing.preprocessing import crop_roi_from_bbox
+from src.preprocessing.preprocessing import (
+    crop_roi_from_bbox
+)
 
 
 class ThyroidInferencePipeline:
@@ -22,86 +23,189 @@ class ThyroidInferencePipeline:
         self.gradcam = gradcam
         self.device = device
 
-        self.cnn_model.eval()
 
+    def analyze(
 
-    def analyze(self, image, image_name = "uploaded_image"):
+        self,
+
+        image,
+
+        image_name="uploaded_image"
+
+    ):
 
         # ==================================================
         # 1. YOLO DETECTION
         # ==================================================
 
         results = self.yolo_model(
+
             image,
+
             verbose=False
+
         )
 
+
         detection = self._extract_detection(
+
             results
+
         )
 
 
         # ==================================================
-        # 2. NO NODULE CASE
+        # 2. NO NODULE DETECTED
         # ==================================================
 
         if detection is None:
 
             return {
-                "image_name": image_name,
-                "nodule_detected": False,
-                "roi": None,
-                "gradcam": None,
+
+                "image_name":
+
+                    image_name,
+
+                "nodule_detected":
+
+                    False,
+
+                "roi":
+
+                    None,
+
+                "gradcam":
+
+                    None,
+
                 "json": {
-                    "nodule_detected": False,
-                    "classification": None,
-                    "classification_confidence": None
+
+                    "image_name":
+
+                        image_name,
+
+                    "nodule_detected":
+
+                        False,
+
+                    "bounding_box":
+
+                        None,
+
+                    "detection_confidence":
+
+                        None,
+
+                    "classification":
+
+                        None,
+
+                    "classification_confidence":
+
+                        None
+
                 }
+
             }
 
 
-        bbox = detection["bounding_box"]
+        # ==================================================
+        # 3. GET BOUNDING BOX
+        # ==================================================
+
+        bbox = detection[
+
+            "bounding_box"
+
+        ]
 
 
         # ==================================================
-        # 3. ROI CROP
+        # 4. CROP ROI
         # ==================================================
 
         roi = crop_roi_from_bbox(
+
             image,
+
             bbox
+
         )
-        
+
+
         # ==================================================
-        # 4. CNN CLASSIFICATION
+        # 5. CNN CLASSIFICATION
         # ==================================================
 
-        classification_result = self.cnn_model.predict(
-            roi
+        classification_result = (
+
+            self.cnn_model.predict(
+
+                roi
+
+            )
+
         )
+
 
         classification = (
-            classification_result["classification"]
+
+            classification_result[
+
+                "classification"
+
+            ]
+
         )
 
+
         classification_confidence = (
+
             classification_result[
+
                 "classification_confidence"
+
             ]
-        ) 
+
+        )
 
 
         # ==================================================
         # 6. GRAD-CAM
         # ==================================================
 
-        gradcam_result = self.gradcam.generate(
-            roi=roi,
-            save_path=f"results/gradcam/{image_name}_gradcam.png"
+        gradcam_path = (
+
+            f"results/gradcam/"
+
+            f"{image_name}_gradcam.png"
+
         )
 
-        grayscale_cam = cv2.imread(
-            gradcam_result["gradcam_path"]
+
+        gradcam_result = (
+
+            self.gradcam.generate(
+
+                roi=roi,
+
+                save_path=gradcam_path
+
+            )
+
+        )
+
+
+        # Read generated Grad-CAM image
+
+        gradcam_image = cv2.imread(
+
+            gradcam_result[
+
+                "gradcam_path"
+
+            ]
+
         )
 
 
@@ -110,37 +214,66 @@ class ThyroidInferencePipeline:
         # ==================================================
 
         result = {
-            "image_name": image_name,
-            "nodule_detected": True,
 
-            "bounding_box": bbox,
+            "image_name":
+
+                image_name,
+
+            "nodule_detected":
+
+                True,
+
+            "bounding_box":
+
+                bbox,
 
             "detection_confidence":
+
                 detection[
+
                     "detection_confidence"
+
                 ],
 
             "classification":
+
                 classification,
 
             "classification_confidence":
-                classification_confidence
+
+                classification_confidence,
+
+            "gradcam_path":
+
+                gradcam_result[
+
+                    "gradcam_path"
+
+                ]
 
         }
 
 
         # ==================================================
-        # 8. RETURN EVERYTHING
+        # 8. RETURN COMPLETE RESULT
         # ==================================================
 
         return {
 
-            "roi": roi,
+            "image_name":
+
+                image_name,
+
+            "roi":
+
+                roi,
 
             "gradcam":
-                grayscale_cam,
+
+                gradcam_image,
 
             "json":
+
                 result
 
         }
@@ -151,14 +284,24 @@ class ThyroidInferencePipeline:
     # ======================================================
 
     def _extract_detection(
+
         self,
+
         results
+
     ):
 
-        result = results[0]
+        result = results[
+
+            0
+
+        ]
+
 
         boxes = result.boxes
 
+
+        # No detection
 
         if boxes is None:
 
@@ -170,43 +313,76 @@ class ThyroidInferencePipeline:
             return None
 
 
-        # Select highest-confidence detection
+        # ==================================================
+        # SELECT HIGHEST-CONFIDENCE DETECTION
+        # ==================================================
 
         confidences = (
+
             boxes.conf
+
             .detach()
+
             .cpu()
+
             .numpy()
+
         )
 
 
-        best_index = np.argmax(
-            confidences
+        best_index = int(
+
+            np.argmax(
+
+                confidences
+
+            )
+
         )
 
 
-        confidence = float(
+        detection_confidence = float(
+
             confidences[
+
                 best_index
+
             ]
+
         )
 
+
+        # ==================================================
+        # EXTRACT BOUNDING BOX
+        # ==================================================
 
         xyxy = (
+
             boxes.xyxy[
+
                 best_index
+
             ]
+
             .detach()
+
             .cpu()
+
             .numpy()
+
         )
 
 
         xmin, ymin, xmax, ymax = (
+
             map(
+
                 int,
+
                 xyxy
+
             )
+
         )
 
 
@@ -214,17 +390,26 @@ class ThyroidInferencePipeline:
 
             "bounding_box": {
 
-                "xmin": xmin,
+                "xmin":
 
-                "ymin": ymin,
+                    xmin,
 
-                "xmax": xmax,
+                "ymin":
 
-                "ymax": ymax
+                    ymin,
+
+                "xmax":
+
+                    xmax,
+
+                "ymax":
+
+                    ymax
 
             },
 
             "detection_confidence":
-                confidence
+
+                detection_confidence
 
         }
