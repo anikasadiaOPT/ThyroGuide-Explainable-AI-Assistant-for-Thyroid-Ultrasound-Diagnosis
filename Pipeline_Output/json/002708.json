@@ -1,0 +1,15 @@
+{
+    "patient_id": "002708",
+    "image_name": "002708.jpg",
+    "nodule_detected": true,
+    "bounding_box": {
+        "xmin": 211,
+        "ymin": 89,
+        "xmax": 260,
+        "ymax": 144
+    },
+    "detection_confidence": 0.805,
+    "classification": "Benign",
+    "classification_confidence": 0.7478,
+    "gradcam_path": "/kaggle/working/results/gradcam/002708_gradcam.png"
+}
