@@ -1,0 +1,15 @@
+{
+    "patient_id": "003546",
+    "image_name": "003546.jpg",
+    "nodule_detected": true,
+    "bounding_box": {
+        "xmin": 247,
+        "ymin": 165,
+        "xmax": 367,
+        "ymax": 258
+    },
+    "detection_confidence": 0.7817,
+    "classification": "Malignant",
+    "classification_confidence": 0.6114,
+    "gradcam_path": "/kaggle/working/results/gradcam/003546_gradcam.png"
+}
