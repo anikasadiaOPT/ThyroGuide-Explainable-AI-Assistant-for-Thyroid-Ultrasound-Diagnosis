@@ -18,10 +18,8 @@ import streamlit as st
 
 BASE_DIR = Path(__file__).resolve().parent
 YOLO_MODEL_PATH = BASE_DIR / "models" / "yolo" / "best.pt"
+CNN_MODEL = BASE_DIR / "models" / "cnn" / "thyroid_cnn.pt"
 
-st.write("BASE_DIR:", BASE_DIR)
-st.write("MODEL:", YOLO_MODEL_PATH)
-st.write("Exists:", YOLO_MODEL_PATH.exists())
 
 # ============================================================
 # PAGE CONFIGURATION
@@ -73,12 +71,10 @@ def load_models():
         else "cpu"
     )
 
-    yolo_model = YOLO(
-        "/appfolder/models/yolo/best.pt"
-    )
+    yolo_model = YOLO(str(YOLO_MODEL_PATH))
 
     cnn_model = ThyroidCNN(
-        model_path="/appfolder/models/cnn/thyroid_cnn.pt",
+        model_path= str(CNN_MODEL),
         device=device
     )
 
