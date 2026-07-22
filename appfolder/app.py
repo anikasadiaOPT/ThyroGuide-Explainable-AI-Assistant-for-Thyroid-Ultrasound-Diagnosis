@@ -66,11 +66,11 @@ def load_models():
     )
 
     yolo_model = YOLO(
-        "models/yolo/best.pt"
+        "/appfolder/models/yolo/best.pt"
     )
 
     cnn_model = ThyroidCNN(
-        model_path="models/cnn/thyroid_cnn.pt",
+        model_path="/appfolder/models/cnn/thyroid_cnn.pt",
         device=device
     )
 
