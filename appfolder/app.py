@@ -13,7 +13,15 @@ from src.pipeline.inference_pipeline import ThyroidInferencePipeline
 from src.grad_cam.gradcamGenerator import GradCAMGenerator
 from src.gemma_integration.gemma_analyzer import GemmaAnalyzer
 from src.report_generation.pdf_report_generator import ThyroGuidePDFReport
+from pathlib import Path
+import streamlit as st
 
+BASE_DIR = Path(__file__).resolve().parent
+YOLO_MODEL_PATH = BASE_DIR / "models" / "yolo" / "best.pt"
+
+st.write("BASE_DIR:", BASE_DIR)
+st.write("MODEL:", YOLO_MODEL_PATH)
+st.write("Exists:", YOLO_MODEL_PATH.exists())
 
 # ============================================================
 # PAGE CONFIGURATION
