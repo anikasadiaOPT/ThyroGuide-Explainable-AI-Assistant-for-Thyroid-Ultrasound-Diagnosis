@@ -286,10 +286,8 @@ with right_col:
             st.session_state.cv_json = None
             st.session_state.gemma_report = None
             st.session_state.patient_info = None
-
             # Save uploaded filename
             st.session_state.uploaded_filename = uploaded_file.name
-
 
             # 1. COMPUTER VISION ANALYSIS
             with st.spinner("Running computer vision analysis..."):
@@ -301,13 +299,16 @@ with right_col:
         # ----------------------------------------------------
         # 3. GEMMA ANALYSIS
         # ----------------------------------------------------
+            patient_info = {
+                "patient_name": patient_name if patient_name else "Not Provided",
+                "age": patient_age if patient_age > 0 else "Not Provided",
+                "gender": patient_gender,
+                "clinical_information": clinical_information if clinical_information else "Not Provided"
+            }
             with st.spinner( "Gemma 4 is generating the explanation..."):
-
                 try:
                     gemma_report = (
-                        gemma_analyzer.generate_report(
-                            cv_json
-                        )
+                        gemma_analyzer.generate_report(cv_json, patient_info)
                     )
                 except Exception as e:
                     st.error(
@@ -337,12 +338,9 @@ with right_col:
 # ============================================================
 
 if st.session_state.analysis_result is not None:
-
-
     # --------------------------------------------------------
     # GET SAVED RESULTS
     # --------------------------------------------------------
-
     result = (
         st.session_state.analysis_result
     )
@@ -358,8 +356,6 @@ if st.session_state.analysis_result is not None:
     patient_info = (
         st.session_state.patient_info
     )
-
-
     st.divider()
 
     st.header(
