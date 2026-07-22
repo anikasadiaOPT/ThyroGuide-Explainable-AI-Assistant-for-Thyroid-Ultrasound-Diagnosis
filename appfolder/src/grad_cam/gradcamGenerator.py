@@ -87,13 +87,7 @@ class GradCAMGenerator:
 
         rgb_img = (
 
-            img.astype(
-
-                np.float32
-
-            )
-
-            / 255.0
+            img.astype(np.float32)/ 255.0
 
         )
 

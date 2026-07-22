@@ -10,7 +10,7 @@ class GemmaAnalyzer:
 
     def __init__(
         self,
-        model_id="google/gemma-4-26B-A4B-it"
+        model_id="google/gemma-4-E2B-it"
     ):
 
         self.model_id = model_id
@@ -20,7 +20,29 @@ class GemmaAnalyzer:
         )
 
 
-    def create_prompt(self, data):
+    def create_prompt(self, data, patient_info=None):
+
+        patient_info = patient_info or {}
+
+        patient_name = patient_info.get(
+            "patient_name",
+            "Not provided"
+        )
+
+        age = patient_info.get(
+            "age",
+            "Not provided"
+        )
+
+        gender = patient_info.get(
+            "gender",
+            "Not provided"
+        )
+
+        clinical_information = patient_info.get(
+            "clinical_information",
+            "Not provided"
+        )
 
         image_name = data.get(
             "image_name",
@@ -58,7 +80,6 @@ class GemmaAnalyzer:
             "Not available"
         )
 
-
         detection_confidence_text = (
 
             f"{detection_confidence * 100:.2f}%"
@@ -66,8 +87,8 @@ class GemmaAnalyzer:
             if detection_confidence is not None
 
             else "Not available"
-        )
 
+        )
 
         classification_confidence_text = (
 
@@ -76,73 +97,155 @@ class GemmaAnalyzer:
             if classification_confidence is not None
 
             else "Not available"
+
         )
 
 
         prompt = f"""
+    You are ThyroGuide AI, an AI-assisted thyroid ultrasound report explanation system.
 
-You are an AI-assisted medical report explanation assistant.
+    Generate a professional structured thyroid ultrasound AI-assisted report.
 
-The computer vision system has already produced the following results.
+    IMPORTANT:
 
-Do not perform a new classification.
-Do not change the classification.
-Only explain the provided results.
+    The computer vision system has already produced the classification.
 
-FACTS:
+    Do NOT perform a new diagnosis.
 
-Image: {image_name}
+    Do NOT change the provided classification.
 
-Nodule detected: {nodule_text}
+    Do NOT invent ultrasound findings.
 
-Detection confidence: {detection_confidence_text}
+    Do NOT invent TI-RADS scores.
 
-CNN classification: {classification}
+    Do NOT invent symptoms, biopsy results, medical history, or clinical information.
 
-Classification confidence: {classification_confidence_text}
+    Clearly distinguish between:
 
-Bounding box: {bounding_box}
+    1. AI-generated computer vision results
+    2. Patient-provided information
+    3. Medical limitations
+
+    PATIENT INFORMATION:
+
+    Patient Name: {patient_name}
+
+    Age: {age}
+
+    Gender: {gender}
+
+    Clinical Information:
+    {clinical_information}
 
 
-Write exactly these six sections:
+    COMPUTER VISION RESULTS:
 
-Detection Summary:
-Explain whether a nodule was detected.
+    Image Name: {image_name}
 
-Classification Summary:
-State exactly the provided CNN classification: {classification}
+    Nodule Detected: {nodule_text}
 
-Confidence Interpretation:
-Explain separately the detection confidence and classification confidence.
+    Detection Confidence: {detection_confidence_text}
 
-Explainability Summary:
-Explain that Grad-CAM highlights image regions that contributed to the CNN decision.
-The bounding box comes from YOLO detection.
-Grad-CAM does not prove a diagnosis.
+    CNN Classification: {classification}
 
-Patient-Friendly Explanation:
-Explain the result in simple language.
-Do not state that the model prediction is a confirmed diagnosis.
+    Classification Confidence: {classification_confidence_text}
 
-Important Limitations:
-State that this is an AI-assisted prediction, not a definitive diagnosis,
-and professional medical review is recommended.
+    Bounding Box: {bounding_box}
 
-Do not invent symptoms, medical history, ultrasound features,
-TI-RADS scores, biopsy results, or clinical information.
 
-Return only the six sections.
+    GENERATE THE REPORT USING EXACTLY THESE SECTIONS:
 
-"""
+    ULTRASOUND AI-ASSISTED ANALYSIS
+
+    Patient Information
+
+    Patient Name: {patient_name}
+
+    Age: {age}
+
+    Gender: {gender}
+
+    Clinical Information:
+    {clinical_information}
+
+
+    AI DETECTION SUMMARY
+
+    Explain whether a thyroid nodule was detected.
+
+    If detected, state that the location is represented by the YOLO bounding box.
+
+    Do not invent anatomical locations that were not provided.
+
+
+    AI CLASSIFICATION SUMMARY
+
+    State exactly:
+
+    {classification}
+
+    Explain that this is the classification produced by the CNN model.
+
+    Do not change the classification.
+
+
+    CONFIDENCE INTERPRETATION
+
+    Explain separately:
+
+    Detection confidence: {detection_confidence_text}
+
+    Classification confidence: {classification_confidence_text}
+
+
+    EXPLAINABILITY
+
+    Explain that:
+
+    - YOLO provides the detected bounding box.
+    - CNN provides the classification.
+    - Grad-CAM highlights image regions that contributed to the CNN decision.
+    - Grad-CAM does not prove a diagnosis.
+
+
+    PATIENT-FRIENDLY EXPLANATION
+
+    Explain the AI result in simple language.
+
+    Do not state that the AI result is a confirmed diagnosis.
+
+
+    IMPORTANT LIMITATIONS
+
+    Clearly state that:
+
+    - This is an AI-assisted prediction.
+    - It is not a definitive medical diagnosis.
+    - The classification should not be interpreted as a confirmed diagnosis.
+    - Professional medical evaluation is recommended.
+    - Additional clinical assessment and appropriate diagnostic procedures may be required.
+
+
+    REPORT FOOTER
+
+    Report generated by ThyroGuide AI.
+
+    Return only the report.
+    """
 
 
         return prompt
 
+    def generate_report(
+        self,
+        data,
+        patient_info=None
+    ):
 
-    def generate_report(self, data):
-
-        prompt = self.create_prompt(data)
-
+        prompt = self.create_prompt(
+            data,
+            patient_info
+        )
 
         response = self.client.chat_completion(
 
@@ -151,7 +254,6 @@ Return only the six sections.
             messages=[
 
                 {
-
                     "role": "user",
 
                     "content": prompt
@@ -160,11 +262,28 @@ Return only the six sections.
 
             ],
 
-            max_tokens=400,
+            max_tokens=1200,
 
             temperature=0.1
 
         )
 
 
-        return response.choices[0].message.content
+        message = response.choices[0].message
+
+
+        if message.content:
+
+            return message.content
+
+
+        elif message.reasoning:
+
+            return message.reasoning
+
+
+        else:
+
+            return (
+                "No report was generated."
+            )
