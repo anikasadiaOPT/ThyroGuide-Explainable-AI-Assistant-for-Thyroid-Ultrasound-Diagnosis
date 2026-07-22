@@ -1,0 +1,44 @@
+# Web App
+streamlit>=1.45.0
+
+# Deep Learning
+torch>=2.7.0
+torchvision>=0.22.0
+torchaudio>=2.7.0
+
+# YOLO
+ultralytics>=8.3.0
+
+# TensorFlow
+tensorflow>=2.18.0
+
+# Image Processing
+opencv-python-headless>=4.10.0
+Pillow>=11.0.0
+
+# Scientific Computing
+numpy>=2.0.0
+scipy>=1.15.0
+pandas>=2.2.0
+
+# Visualization
+matplotlib>=3.10.0
+
+# Explainability
+grad-cam>=1.5.4
+
+# LLM (Gemma via Hugging Face)
+transformers>=4.52.0
+accelerate>=1.7.0
+sentencepiece>=0.2.0
+
+# Ollama (if using local Gemma)
+ollama>=0.5.0
+
+# PDF Report Generation
+reportlab>=4.2.0
+
+# Utilities
+PyYAML>=6.0
+requests>=2.32.0
+tqdm>=4.67.0

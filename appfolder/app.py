@@ -588,6 +588,8 @@ if st.session_state.analysis_result is not None:
 
         if (st.session_state.get("pdf_path")and os.path.exists(st.session_state.pdf_path)):
             st.success("Professional medical report generated successfully.")
+            pdf_path = st.session_state.pdf_path
+            report_filename = st.session_state.pdf_filename
             with open(pdf_path,"rb") as pdf_file:
                 st.download_button(
                     label=(
