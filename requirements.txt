@@ -9,8 +9,8 @@ torchaudio>=2.7.0
 # YOLO
 ultralytics>=8.3.0
 
-# TensorFlow
-tensorflow>=2.18.0
+# # TensorFlow
+# tensorflow>=2.18.0
 
 # Image Processing
 opencv-python-headless>=4.10.0
