@@ -115,6 +115,8 @@ It:
 ## Project Structure
 ```text
 ThyroGuide-Explainable-AI-Assistant-for-Thyroid-Ultrasound-Diagnosis/
+├── Annotations/
+│   └── ThyroGuide_Gemma4.ipynb
 ├── README.md
 ├── notebooks/
 │   └── ThyroGuide_Gemma4.ipynb
