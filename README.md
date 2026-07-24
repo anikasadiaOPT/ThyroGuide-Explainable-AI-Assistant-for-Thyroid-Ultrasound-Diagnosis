@@ -117,24 +117,20 @@ It:
 ThyroGuide-Explainable-AI-Assistant-for-Thyroid-Ultrasound-Diagnosis/
 ├── Annotations/
 ├── JPEGImages/
-├── notebooks/
+├── notebooks/ 
 │   └── thyroid_nodule_preprocessing.ipynb
 │   └── Thyroid_Nodule_Training.ipynb
 │   └── Thyroid_Nodule_Pipeline.ipynb
 ├── README.md
-
-│   └── ThyroGuide_Gemma4.ipynb
 ├── models/
 │   ├── yolo11m_weights/
 │   └── cnn_classifier/
-├── outputs/
-│   ├── detections/
-│   ├── roi/
-│   ├── gradcam/
-│   └── reports/
-└── assets/
-    ├── workflow.png
-    └── demo-video-link.txt
+├── Training_Output/
+│   ├── GRADCAM_Output/
+│   └── model/Classification/
+└── appfloder/
+    ├── src/
+    └── mode/
 ```
 > Update paths as needed to match your actual repository files.
 
