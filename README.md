@@ -116,9 +116,13 @@ It:
 ```text
 ThyroGuide-Explainable-AI-Assistant-for-Thyroid-Ultrasound-Diagnosis/
 ├── Annotations/
-│   └── ThyroGuide_Gemma4.ipynb
-├── README.md
+├── JPEGImages/
 ├── notebooks/
+│   └── thyroid_nodule_preprocessing.ipynb
+│   └── Thyroid_Nodule_Training.ipynb
+│   └── Thyroid_Nodule_Pipeline.ipynb
+├── README.md
+
 │   └── ThyroGuide_Gemma4.ipynb
 ├── models/
 │   ├── yolo11m_weights/
