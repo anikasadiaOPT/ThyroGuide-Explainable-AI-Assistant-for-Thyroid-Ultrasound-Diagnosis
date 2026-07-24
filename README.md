@@ -210,6 +210,8 @@ ThyroGuide is designed to:
    [https://pmc.ncbi.nlm.nih.gov/articles/PMC8986939/](https://pmc.ncbi.nlm.nih.gov/articles/PMC8986939/)
 2. TN5000: An Ultrasound Image Dataset for Thyroid Nodule Detection and Classification
    [https://figshare.com/s/cb6a67f17c04b29e7edd](https://figshare.com/s/cb6a67f17c04b29e7edd)
+3. TN5000: An Ultrasound Image Dataset for Thyroid Nodule Detection and Classification(Paper)
+   [https://www.nature.com/articles/s41597-025-05757-4](https://www.nature.com/articles/s41597-025-05757-4)
 
 ---
 
