@@ -108,7 +108,7 @@ It:
 - **Classification:** Convolutional Neural Network (CNN)  
 - **Explainability:** Grad-CAM  
 - **Reasoning & Report Generation:** Gemma 4  
-- **Development Environment:** Jupyter/Colab Notebook workflow
+- **Development Environment:** Streamlit/Jupyter/Colab Notebook workflow
 
 ---
 
