@@ -1,0 +1,19 @@
+{
+    "image_name": "003922.jpg",
+    "computer_vision_analysis": {
+        "patient_id": "003922",
+        "image_name": "003922.jpg",
+        "nodule_detected": true,
+        "bounding_box": {
+            "xmin": 419,
+            "ymin": 161,
+            "xmax": 488,
+            "ymax": 234
+        },
+        "detection_confidence": 0.8038,
+        "classification": "Malignant",
+        "classification_confidence": 0.7599,
+        "gradcam_path": "/kaggle/working/results/gradcam/003922_gradcam.png"
+    },
+    "gemma_analysis": "Detection Summary:\nYOLO detected a nodule.\n\nClassification Summary:\nThe CNN classified the nodule as Malignant.\n\nConfidence Interpretation:\nThe YOLO detection confidence is 80.38%.\nThe CNN classification confidence is 75.99%.\n\nExplainability Summary:\nGrad-CAM highlights regions that contributed to the CNN classification decision.\nThe bounding box comes from YOLO.\nGrad-CAM does not prove a diagnosis.\n\nPatient-Friendly Explanation:\nThe analysis detected a nodule, and the AI system classified it as Malignant with a confidence of 75.99%. Please understand that this is an AI-assisted prediction and requires professional medical review.\n\nImportant Limitations:\nThis is an AI-assisted prediction, not a definitive diagnosis, and professional clinical review is recommended."
+}
