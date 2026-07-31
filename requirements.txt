@@ -1,61 +1,31 @@
-# -----------------------------
-# Streamlit
-# -----------------------------
 streamlit==1.49.0
 
-# -----------------------------
-# Deep Learning
-# -----------------------------
-torch==2.7.1
-torchvision==0.22.1
-torchaudio==2.7.1
+torch==2.13.0
+torchvision
+torchaudio
 
-# -----------------------------
-# Computer Vision
-# -----------------------------
 opencv-python-headless==4.10.0.84
 Pillow==11.3.0
 
-# -----------------------------
-# YOLO
-# -----------------------------
-ultralytics==8.3.187
+ultralytics>=8.3.187
 
-# -----------------------------
-# Scientific Computing
-# -----------------------------
 numpy==2.1.3
 scipy==1.15.3
 pandas==2.3.1
 
-# -----------------------------
-# Visualization
-# -----------------------------
 matplotlib==3.10.5
 
-# -----------------------------
-# Explainability
-# -----------------------------
 grad-cam==1.5.5
 
-# -----------------------------
-# Hugging Face / Gemma
-# -----------------------------
 transformers==4.52.4
 accelerate==1.7.0
-huggingface_hub==0.33.4
+huggingface_hub==0.33.5
 tokenizers==0.21.2
 sentencepiece==0.2.0
 safetensors==0.5.3
 
-# -----------------------------
-# PDF Generation
-# -----------------------------
 reportlab==4.4.3
 
-# -----------------------------
-# Utilities
-# -----------------------------
 PyYAML==6.0.2
 requests==2.32.4
 tqdm==4.67.1
