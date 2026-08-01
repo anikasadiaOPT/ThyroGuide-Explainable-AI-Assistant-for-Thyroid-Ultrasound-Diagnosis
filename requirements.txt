@@ -10,7 +10,7 @@ Pillow==11.3.0
 ultralytics>=8.3.187
 
 numpy>=2.3.0
-scipy==1.15.3
+scipy
 pandas==2.3.1
 
 matplotlib==3.10.5
