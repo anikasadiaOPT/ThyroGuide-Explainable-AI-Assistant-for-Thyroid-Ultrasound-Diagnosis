@@ -156,7 +156,7 @@ A demo video is attached/provided in the project resources and showcases:
 ---
 
 ## Clinical Value & Impact
-ThyroGuide is designed to:
+ThyroGuide AI is designed to:
 - Improve consistency in preliminary AI-assisted interpretation,
 - Reduce black-box perception through visual + textual explainability,
 - Save clinician review time by summarizing technical outputs,
